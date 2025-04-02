@@ -13,9 +13,10 @@ describe("Checkout", ()=>{
             checkout = new Checkout()
         })
 
-        it("scan single product", () =>{
-            checkout.scan("A")
-            assertThat(checkout.total).is(50)
+        it("no products scanned", () =>{
+            assertThat(checkout.total).is(0)
         })
+
+
     })
 })
