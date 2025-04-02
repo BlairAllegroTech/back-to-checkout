@@ -1,0 +1,42 @@
+{
+  "files.exclude": {
+    "**/node_modules": true
+  },
+  "files.readonlyInclude": {
+    "node_modules/**/*.*": true
+  },
+
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#eacf81",
+    "activityBar.foreground": "#15202b",
+    "titleBar.activeBackground": "#e3be55",
+    "titleBar.activeForeground": "#15202b",
+    "activityBar.activeBackground": "#eacf81",
+    "activityBar.inactiveForeground": "#15202b99",
+    "activityBarBadge.background": "#1ba481",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#15202b99",
+    "sash.hoverBorder": "#eacf81",
+    "statusBar.background": "#e3be55",
+    "statusBar.foreground": "#15202b",
+    "statusBarItem.hoverBackground": "#dcad29",
+    "statusBarItem.remoteBackground": "#e3be55",
+    "statusBarItem.remoteForeground": "#15202b",
+    "titleBar.inactiveBackground": "#e3be5599",
+    "titleBar.inactiveForeground": "#15202b99"
+  },
+
+  "jest.jestCommandLine": "npm run test --",
+  "jestrunner.codeLensSelector": "**/*.{micro,integration,test,spec}.{js,jsx,ts,tsx}",
+  "jestrunner.runOptions": ["--detectOpenHandles", "--forceExit"],
+  "jestrunner.configPath": "./jest.config.ts",
+
+  "prettier.enable": true,
+
+  "editor.formatOnSave": false,
+  "editor.formatOnPaste": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": ["source.organizeImports", "source.fixAll.eslint"],
+
+  "typescript.preferences.importModuleSpecifier": "relative",
+}
