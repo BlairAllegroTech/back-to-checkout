@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  pull_request:
+  workflow_call:
+
+env:
+  VERSION: "0.0.${{ github.run_number }}"
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  test-micro:
+    runs-on: ubuntu-latest
+    name: Micro Test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: NPM install
+        run: npm ci
+
+      # - name: Code Lint
+      #   run: npm run lint
+
+      - name: Micro Test
+        run: npm run test:micro
