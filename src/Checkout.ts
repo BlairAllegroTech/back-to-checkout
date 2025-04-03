@@ -1,9 +1,9 @@
 import { ProductNotFoundError } from "./Errors/ProductNotFoundError";
-import { ProductPriceRule } from "./ProductDiscountRule";
+import { ProductPriceStrategy } from "./priceStrategy/ProductPriceStrategy";
 
 type ScanRecord = {
-    price: number;
-    quantity: number;
+  price: number;
+  quantity: number;
 };
 
 export class Checkout {
@@ -11,48 +11,37 @@ export class Checkout {
 
   private scans: Record<string, ScanRecord> = {};
 
-  constructor(private products: Array<ProductPriceRule>) {}
+  constructor(private productPriceRules: Array<ProductPriceStrategy>) {}
   scan(productSKU: string) {
-    const productPrice = this.products.find(
-      (x) => x.product.sku === productSKU
+    const productPrice = this.productPriceRules.find(
+      (x) => x.isApplicable(productSKU)
     );
 
     if (!productPrice) throw new ProductNotFoundError(productSKU);
 
     const { product } = productPrice;
-    const existingScan = this.scans[product.sku]
-    this.scans[product.sku] = this.recordNewScan(productPrice, existingScan)
-    this.total = Object.values(this.scans).reduce((accumulator, scan ) => accumulator + scan.price, 0)
+    const existingScan = this.scans[product.sku];
+    this.scans[product.sku] = this.recordNewScan(productPrice, existingScan);
+    this.total = this.calculateTotalPrice(this.scans);
   }
 
-    recordNewScan(productPrice: ProductPriceRule, existingScan: ScanRecord| undefined): ScanRecord {
-        if(!existingScan) return {quantity: 1, price: productPrice.product.price}
+  recordNewScan(
+    productPrice: ProductPriceStrategy,
+    existingScan: ScanRecord | undefined
+  ): ScanRecord {
+    if (!existingScan)
+      return { quantity: 1, price: productPrice.product.price };
 
-        const newQuantity = existingScan.quantity +1
-        const newPrice = this.calculatePrice(newQuantity, productPrice)
+    const newQuantity = existingScan.quantity + 1;
+    const newPrice = productPrice.calculatePrice(newQuantity);
 
-        return {quantity: newQuantity, price: newPrice}
-    }
-    calculatePrice(quantity: number, productPriceRule: ProductPriceRule): number {
-        const {product, discount } = productPriceRule
-        const basePrice = product.price * quantity
+    return { quantity: newQuantity, price: newPrice };
+  }
 
-
-        const sortedRules = discount.sort((rule1,rule2) =>  rule1.quantity - rule2.quantity).reverse()
-
-        let totalDiscount = 0
-        let itemsRemaining = quantity
-
-        while(itemsRemaining) {
-            const firstApplicableRule = sortedRules.find(x => x.quantity <= itemsRemaining)
-            if(!firstApplicableRule) break
-
-            console.log(firstApplicableRule)
-            totalDiscount += firstApplicableRule.discount
-            itemsRemaining -= firstApplicableRule.quantity
-        }
-
-        return basePrice - totalDiscount
-
-    }
+  private calculateTotalPrice(scans: Record<string, ScanRecord>): number {
+    return Object.values(scans).reduce(
+      (accumulator, scan) => accumulator + scan.price,
+      0
+    );
+  }
 }

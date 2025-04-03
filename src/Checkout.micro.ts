@@ -2,33 +2,29 @@ import { assertThat } from "mismatched";
 import { Checkout } from "./Checkout";
 import { ProductNotFoundError } from "./Errors/ProductNotFoundError";
 import { ProductA, ProductB, ProductC, ProductD } from "./Product";
+import { QuantityBasedPriceStrategy, NoDiscountPriceStrategy } from "./ProductPriceStrategy";
+
 
 describe("Checkout", () => {
   let checkout: Checkout;
   beforeEach(() => {
     checkout = new Checkout([
-      {
-        product: ProductA,
-        discount: [
-          {
-            quantity: 3,
-            discount: 20,
-            description: "Discount applied for Quantity of 3",
-          },
-        ],
-      },
-      {
-        product: ProductB,
-        discount: [
-          {
-            quantity: 2,
-            discount: 15,
-            description: "Discount applied for Quantity of 2",
-          },
-        ],
-      },
-      { product: ProductC, discount: [] },
-      { product: ProductD, discount: [] },
+      new QuantityBasedPriceStrategy(ProductA, [
+        {
+          quantity: 3,
+          discount: 20,
+          description: "Discount applied for Quantity of 3",
+        },
+      ]),
+      new QuantityBasedPriceStrategy(ProductB, [
+        {
+          quantity: 2,
+          discount: 15,
+          description: "Discount applied for Quantity of 2",
+        },
+      ]),
+      new NoDiscountPriceStrategy(ProductC),
+      new NoDiscountPriceStrategy(ProductD),
     ]);
   });
 
@@ -142,7 +138,6 @@ describe("Checkout", () => {
         { scan: "AAABB", price: 175 },
         { scan: "AAABBD", price: 190 },
         { scan: "DABABA", price: 190 },
-
       ].forEach((testCase) => {
         it(`Scan: ${testCase.scan}`, () =>
           assertThat(price(testCase.scan)).is(testCase.price));
