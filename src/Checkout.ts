@@ -1,5 +1,6 @@
 import { ProductNotFoundError } from "./Errors/ProductNotFoundError";
-import { ProductPriceStrategy } from "./priceStrategy/ProductPriceStrategy";
+import { ProductPriceStrategy } from "./ProductPriceStrategy";
+
 
 type ScanRecord = {
   price: number;
@@ -30,7 +31,7 @@ export class Checkout {
     existingScan: ScanRecord | undefined
   ): ScanRecord {
     if (!existingScan)
-      return { quantity: 1, price: productPrice.product.price };
+      return { quantity: 1, price: productPrice.calculatePrice(1) };
 
     const newQuantity = existingScan.quantity + 1;
     const newPrice = productPrice.calculatePrice(newQuantity);
