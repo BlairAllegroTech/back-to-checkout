@@ -1,4 +1,3 @@
-
-export * from "./NoDiscountPriceStrategy";
-export * from "./ProductPriceStrategy";
-export * from "./QuantityBasedPriceStrategy";
+export * from "./NoDiscountPriceStrategy"
+export * from "./ProductPriceStrategy"
+export * from "./QuantityBasedPriceStrategy"

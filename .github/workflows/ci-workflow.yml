@@ -27,8 +27,8 @@ jobs:
       - name: NPM install
         run: npm ci
 
-      # - name: Code Lint
-      #   run: npm run lint
+      - name: Code Lint
+        run: npm run lint
 
       - name: Micro Test
         run: npm run test:micro

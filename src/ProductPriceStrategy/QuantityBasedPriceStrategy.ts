@@ -1,11 +1,11 @@
-import { Product } from "../Product";
-import { ProductPriceStrategy } from "./ProductPriceStrategy";
+import { Product } from "../Product"
+import { ProductPriceStrategy } from "./ProductPriceStrategy"
 
 export type QuantityBasedDiscountRule = {
-  quantity: number;
-  discount: number;
-  description: string;
-};
+  quantity: number
+  discount: number
+  description: string
+}
 
 export class QuantityBasedPriceStrategy implements ProductPriceStrategy {
   constructor(
@@ -14,28 +14,28 @@ export class QuantityBasedPriceStrategy implements ProductPriceStrategy {
   ) {
     discountRules
       .sort((rule1, rule2) => rule1.quantity - rule2.quantity)
-      .reverse();
+      .reverse()
   }
   isApplicable(sku: string): boolean {
-    return this.product.sku === sku;
+    return this.product.sku === sku
   }
   calculatePrice(quantity: number): number {
-    const basePrice = this.product.price * quantity;
+    const basePrice = this.product.price * quantity
 
-    let totalDiscount = 0;
-    let itemsRemaining = quantity;
+    let totalDiscount = 0
+    let itemsRemaining = quantity
 
     while (itemsRemaining) {
       const firstApplicableRule = this.discountRules.find(
         (x) => x.quantity <= itemsRemaining
-      );
-      if (!firstApplicableRule) break;
+      )
+      if (!firstApplicableRule) break
 
-      console.log(firstApplicableRule, this.product);
-      totalDiscount += firstApplicableRule.discount;
-      itemsRemaining -= firstApplicableRule.quantity;
+      console.log(firstApplicableRule, this.product)
+      totalDiscount += firstApplicableRule.discount
+      itemsRemaining -= firstApplicableRule.quantity
     }
 
-    return basePrice - totalDiscount;
+    return basePrice - totalDiscount
   }
 }

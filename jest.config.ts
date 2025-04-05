@@ -16,7 +16,7 @@ const config: Config = {
       preset: "ts-jest",
       modulePaths: [compilerOptions.baseUrl],
       moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths)
-    },
+    }
     // {
     //   displayName: "integration",
     //   testMatch: ["<rootDir>/src/**/*.integration.ts"],
