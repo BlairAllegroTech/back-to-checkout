@@ -1,14 +1,10 @@
+import { someFixture } from "@chrysalis-it/some-fixture"
 import { assertThat } from "mismatched"
+import { Thespian, TMocked } from "thespian"
 import { Checkout } from "./Checkout"
 import { ProductNotFoundError } from "./Errors/ProductNotFoundError"
 import { Product, ProductA, ProductB, ProductC, ProductD } from "./Product"
-import { Thespian, TMocked } from "thespian"
-import { someFixture } from "@chrysalis-it/some-fixture"
-import {
-  NoDiscountPriceStrategy,
-  ProductPriceStrategy,
-  QuantityBasedPriceStrategy
-} from "./ProductPriceStrategy"
+import { NoDiscountPriceStrategy, ProductPriceStrategy, QuantityBasedPriceStrategy } from "./ProductPriceStrategy"
 
 describe("Checkout", () => {
   describe("Karta Checkout Test Cases", () => {
@@ -40,9 +36,7 @@ describe("Checkout", () => {
 
     describe("scan single product", () => {
       it("Un Expected product scanned", () => {
-        assertThat(() => checkout.scan("Z")).throws(
-          new ProductNotFoundError("Z")
-        )
+        assertThat(() => checkout.scan("Z")).throws(new ProductNotFoundError("Z"))
       })
 
       it("scan product A", () => {
@@ -145,8 +139,7 @@ describe("Checkout", () => {
           { scan: "AAABBD", price: 190 },
           { scan: "DABABA", price: 190 }
         ].forEach((testCase) => {
-          it(`Scan: ${testCase.scan}`, () =>
-            assertThat(price(testCase.scan)).is(testCase.price))
+          it(`Scan: ${testCase.scan}`, () => assertThat(price(testCase.scan)).is(testCase.price))
         })
       })
     })
@@ -169,37 +162,26 @@ describe("Checkout", () => {
 
       someProductPriceStrategy1 = mocks.mock("someProductPriceStrategy1")
       someProductPriceStrategy2 = mocks.mock("someProductPriceStrategy2")
-      checkout = new Checkout([
-        someProductPriceStrategy1.object,
-        someProductPriceStrategy2.object
-      ])
+      checkout = new Checkout([someProductPriceStrategy1.object, someProductPriceStrategy2.object])
     })
 
     afterAll(() => mocks.verify())
 
     it("Does not find missing price strategy", () => {
-      someProductPriceStrategy1
-        .setup((x) => x.isApplicable("B"))
-        .returns(() => false)
-      someProductPriceStrategy2
-        .setup((x) => x.isApplicable("B"))
-        .returns(() => false)
+      someProductPriceStrategy1.setup((x) => x.isApplicable("B")).returns(() => false)
+      someProductPriceStrategy2.setup((x) => x.isApplicable("B")).returns(() => false)
       assertThat(() => checkout.scan("B")).throws(new ProductNotFoundError("B"))
     })
 
     it("Total Price of Single Product", () => {
       // given
       const somePrice = someFixture.someUniqueNumber()
-      someProductPriceStrategy1
-        .setup((x) => x.isApplicable(someProduct1.sku))
-        .returns(() => true)
+      someProductPriceStrategy1.setup((x) => x.isApplicable(someProduct1.sku)).returns(() => true)
       someProductPriceStrategy1
         .setup((x) => x.product)
         .timesAtLeast(1)
         .returns(() => someProduct1)
-      someProductPriceStrategy1
-        .setup((x) => x.calculatePrice(1))
-        .returns(() => somePrice)
+      someProductPriceStrategy1.setup((x) => x.calculatePrice(1)).returns(() => somePrice)
 
       // when
       checkout.scan(someProduct1.sku)
@@ -220,12 +202,8 @@ describe("Checkout", () => {
         .setup((x) => x.product)
         .times(2)
         .returns(() => someProduct1)
-      someProductPriceStrategy1
-        .setup((x) => x.calculatePrice(1))
-        .returns(() => someFixture.someUniqueNumber())
-      someProductPriceStrategy1
-        .setup((x) => x.calculatePrice(2))
-        .returns(() => somePriceScan)
+      someProductPriceStrategy1.setup((x) => x.calculatePrice(1)).returns(() => someFixture.someUniqueNumber())
+      someProductPriceStrategy1.setup((x) => x.calculatePrice(2)).returns(() => somePriceScan)
 
       // when
       checkout.scan(someProduct1.sku)
@@ -244,31 +222,21 @@ describe("Checkout", () => {
       })
 
       // Scan#1
-      someProductPriceStrategy1
-        .setup((x) => x.isApplicable(someProduct1.sku))
-        .returns(() => true)
+      someProductPriceStrategy1.setup((x) => x.isApplicable(someProduct1.sku)).returns(() => true)
       someProductPriceStrategy1
         .setup((x) => x.product)
         .timesAtLeast(1)
         .returns(() => someProduct1)
-      someProductPriceStrategy1
-        .setup((x) => x.calculatePrice(1))
-        .returns(() => somePrice1)
+      someProductPriceStrategy1.setup((x) => x.calculatePrice(1)).returns(() => somePrice1)
 
       // Scan#2
-      someProductPriceStrategy1
-        .setup((x) => x.isApplicable(someProduct2.sku))
-        .returns(() => false)
-      someProductPriceStrategy2
-        .setup((x) => x.isApplicable(someProduct2.sku))
-        .returns(() => true)
+      someProductPriceStrategy1.setup((x) => x.isApplicable(someProduct2.sku)).returns(() => false)
+      someProductPriceStrategy2.setup((x) => x.isApplicable(someProduct2.sku)).returns(() => true)
       someProductPriceStrategy2
         .setup((x) => x.product)
         .timesAtLeast(1)
         .returns(() => someProduct2)
-      someProductPriceStrategy2
-        .setup((x) => x.calculatePrice(1))
-        .returns(() => somePrice2)
+      someProductPriceStrategy2.setup((x) => x.calculatePrice(1)).returns(() => somePrice2)
 
       // when
       checkout.scan(someProduct1.sku)

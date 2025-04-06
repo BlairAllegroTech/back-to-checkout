@@ -11,10 +11,7 @@ describe("NoDiscountPriceStrategy", () => {
     priceStrategy = new NoDiscountPriceStrategy(product)
   })
 
-  it("Single Item", () =>
-    assertThat(priceStrategy.calculatePrice(1)).is(product.price))
-  it("Two Items", () =>
-    assertThat(priceStrategy.calculatePrice(2)).is(product.price * 2))
-  it("Three Items", () =>
-    assertThat(priceStrategy.calculatePrice(3)).is(product.price * 3))
+  it("Single Item", () => assertThat(priceStrategy.calculatePrice(1)).is(product.price))
+  it("Two Items", () => assertThat(priceStrategy.calculatePrice(2)).is(product.price * 2))
+  it("Three Items", () => assertThat(priceStrategy.calculatePrice(3)).is(product.price * 3))
 })

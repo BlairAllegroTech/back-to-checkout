@@ -12,9 +12,7 @@ export class QuantityBasedPriceStrategy implements ProductPriceStrategy {
     public product: Product,
     private discountRules: Array<QuantityBasedDiscountRule>
   ) {
-    discountRules
-      .sort((rule1, rule2) => rule1.quantity - rule2.quantity)
-      .reverse()
+    discountRules.sort((rule1, rule2) => rule1.quantity - rule2.quantity).reverse()
   }
   isApplicable(sku: string): boolean {
     return this.product.sku === sku
@@ -26,9 +24,7 @@ export class QuantityBasedPriceStrategy implements ProductPriceStrategy {
     let itemsRemaining = quantity
 
     while (itemsRemaining) {
-      const firstApplicableRule = this.discountRules.find(
-        (x) => x.quantity <= itemsRemaining
-      )
+      const firstApplicableRule = this.discountRules.find((x) => x.quantity <= itemsRemaining)
       if (!firstApplicableRule) break
 
       console.log(firstApplicableRule, this.product)

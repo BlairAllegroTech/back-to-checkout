@@ -14,15 +14,11 @@ describe("QuantityBasedPriceStrategy", () => {
     ])
   })
 
-  it("Single Item", () =>
-    assertThat(priceStrategy.calculatePrice(1)).is(product.price))
-  it("Two Items", () =>
-    assertThat(priceStrategy.calculatePrice(2)).is(product.price * 2))
+  it("Single Item", () => assertThat(priceStrategy.calculatePrice(1)).is(product.price))
+  it("Two Items", () => assertThat(priceStrategy.calculatePrice(2)).is(product.price * 2))
   it("Three Items", () => assertThat(priceStrategy.calculatePrice(3)).is(130))
-  it("Four Items", () =>
-    assertThat(priceStrategy.calculatePrice(4)).is(130 + product.price))
-  it("Five Items", () =>
-    assertThat(priceStrategy.calculatePrice(5)).is(product.price * 5 - 30))
+  it("Four Items", () => assertThat(priceStrategy.calculatePrice(4)).is(130 + product.price))
+  it("Five Items", () => assertThat(priceStrategy.calculatePrice(5)).is(product.price * 5 - 30))
   it("Six Items", () =>
     assertThat(priceStrategy.calculatePrice(6))
       .withMessage("Does not minimise price")
